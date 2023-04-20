@@ -1,0 +1,45 @@
+Windows Registry Editor Version 5.00
+
+;HKEY_CLASSES_ROOT\Directory\Background\shell 在此处打开cmd命令行窗口
+
+;[-HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdHere]
+;[-HKEY_CLASSES_ROOT\Directory\Background\shell\runas]
+;[-HKEY_CLASSES_ROOT\Directory\Background\shell\PowershellAdmin]
+;; 1.右键：命令行
+;[HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdHere]@="在此处打开命令行窗口"
+;[HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdHere\command]@="cmd.exe -noexit -command Set-Location -literalPath \"%V\"" 
+;; 2.右键：命令行（管理员）
+;[HKEY_CLASSES_ROOT\Directory\Background\shell\runas]@="在此处打开命令行窗口(管理员)""ShowBasedOnVelocityId"=dword:00639bc8 
+;[HKEY_CLASSES_ROOT\Directory\Background\shell\runas\command]@="cmd.exe /s /k pushd \"%V\""
+; ; 3.shift+右键：Powershell(管理员)
+; [HKEY_CLASSES_ROOT\Directory\Background\shell\PowershellAdmin]@="在此处打开 Powershelll 窗口(管理员)""Extended"=""
+; [HKEY_CLASSES_ROOT\Directory\Background\shell\PowershellAdmin\command]@="\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -windowstyle hidden -Command $stpath = pwd; Start-Process PowerShell -ArgumentList \\\"-NoExit\\\", \\\"-Command Set-Location -literalPath '%V'\\\" -verb RunAs"
+; 
+;[HKEY_CLASSES_ROOT\LibraryFolder\background\shell\OpenCmdHere]
+;@="在此处打开cmd窗口(管理员)"
+;"Icon"="cmd.exe"
+;[HKEY_CLASSES_ROOT\LibraryFolder\background\shell\OpenCmdHere\command]
+;@="PowerShell -windowstyle hidden -Command \"Start-Process cmd.exe -ArgumentList '/s,/k, pushd,%V' -Verb RunAs\""
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdHere]
+@="在此处打开命令行窗口"
+ 
+[HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdHere\command]
+@="cmd.exe -noexit -command Set-Location -literalPath \"%V\"" 
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdAdmin]
+@="在此处打开 cmd 窗口(管理员)"
+"Extended"=""
+"HasLUAShield"=""
+"ShowBasedOnVelocityId"=dword:00639bc8
+ 
+[HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdAdmin\command]
+@="cmd.exe /s /k pushd \"%V\""
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\PowershellAdmin]
+@="在此处打开 Powershell 窗口(管理员)"
+"Extended"=""
+ 
+[HKEY_CLASSES_ROOT\Directory\Background\shell\PowershellAdmin\command]
+@="\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -windowstyle hidden -Command $stpath = pwd; Start-Process PowerShell -ArgumentList \\\"-NoExit\\\", \\\"-Command Set-Location -literalPath '%V'\\\" -verb RunAs"
+
