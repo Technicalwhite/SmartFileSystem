@@ -70,6 +70,7 @@ app.all('*', function (req, res, next) {
 //     res.send('?????');//path.join(__dirname, '../web/index.html')
 // });
 app.get('/q', (req, res) => {
+    console.log('请求的/q',11111)
     var _a;
     // res.send('Hello Express QAQ!');
     // let reqobj = JSON.stringify({...req})

@@ -2,11 +2,11 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-03-31 01:11:55
  * @LastEditors: QAQ 2234558846@qq.com
- * @LastEditTime: 2023-04-20 19:02:54
+ * @LastEditTime: 2024-03-22 14:05:14
  * @FilePath: \SmartFileSystem\src\main.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import buildName from './Modules/test';
+// import buildName from './Modules/test';
 // let result1 = buildName("Bob");                  // 现在可以正常工作
 // // let result2 = buildName("Bob", "Adams", "Sra");  // 错误, 参数太多
 // let result3 = buildName("Bob", "Adams");         // 参数刚刚好
@@ -33,16 +33,29 @@ import history from 'connect-history-api-fallback';
 import os from 'os';
 // const history = require('connect-history-api-fallback');
 const app = express();
-let topath: any = function (context: any) {
-    return context.parsedUrl.path?.toString()
-}
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 app.use(history({
-    htmlAcceptHeaders: ['text/html', 'application/xhtml+xml']
+    htmlAcceptHeaders: ['text/html', 'application/xhtml+xml'],
+    // 定向
+    rewrites: [
+        {
+            // from: /^\/(api+\/){1}/,
+            from: /^\/.*$/,
+            to: function (context) {
+                // console.log('context :>> ', context);
+                let path: string = context.parsedUrl.path || ''
+                console.log('path :>> ', path);
+                return "/api"
+            }
+        }
+    ]
 }));
 // 模板引擎配置 渲染静态文件
-app.use(express.static(path.join(__dirname, '../web/PC_Side/')))
+app.use(express.static(path.join(__dirname, '../web')))
+// app.use(express.static(path.join(__dirname, '../web/PC_Side/')))
 // app.use('/bin', express.static(path.join(__dirname, '../bin')))
-app.use('/static', express.static(path.join(__dirname, '../web/admin')))
+// app.use('/static', express.static(path.join(__dirname, '../web/admin')))
 // 模板引擎配置 引用ejs
 // app.set('views',"web");  //设置视图的对应目录
 // app.set("view engine","html");       //设置默认的模板引擎
@@ -51,28 +64,27 @@ app.use('/static', express.static(path.join(__dirname, '../web/admin')))
 //设置允许跨域访问该服务.
 app.all('*', function (req, res, next) {
     const Credentials = true
-    // //设置允许跨域的域名，*代表允许任意域名跨域
+    // 设置允许跨域的域名，*代表允许任意域名跨域
     // res.header("Access-Control-Allow-Origin", req.headers.origin || '*');
-    // // //允许的header类型
-    // res.header('Access-Control-Allow-Headers', 'Authorization,X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
-    // res.header('Content-Type', 'application/json;charset=utf-8');
-  //设置允许跨域的域名，*代表允许任意域名跨域
-  res.header("Access-Control-Allow-Origin", req.headers.origin || '*');
-  // //允许的header类型
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+    // 允许的header类型
+    res.header('Access-Control-Allow-Headers', 'Authorization,X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
+    res.header('Content-Type', 'application/json;charset=utf-8');
+    //设置允许跨域的域名，*代表允许任意域名跨域
+    res.header("Access-Control-Allow-Origin", req.headers.origin || '*');
     // 可以带cookies
     res.header("Access-Control-Allow-Credentials", 'true');
     //跨域允许的请求方式 
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-
-    if (req.method == 'OPTIONS') {
-        res.header('Allow', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
-        res.sendStatus(200);
-    } else {
-        next();
-    }
-    next();
+    console.log('req.method :>> ', req.method);
+    // if (req.method == 'OPTIONS') {
+    //     res.header('Allow', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
+    //     res.sendStatus(200);
+    // } else {
+    //     next();
+    // }
+    return next();
 });
+app.use('/', routerApi)
 // test
 // app.get('/', (req: express.Request, res: express.Response) => {
 //     res.send('?????');//path.join(__dirname, '../web/index.html')
@@ -82,7 +94,7 @@ app.get('/q', (req, res) => {
     // let reqobj = JSON.stringify({...req})
     // let add=req.query.add;
     //adds存储用户的add数组
-    let adds=req.cookies?.add ||[];
+    let adds = req.cookies?.add || [];
     // console.log('请求的/q',adds,'>>',req.headers)
     let interfaces = os.networkInterfaces();
     let data: Array<any> = []
@@ -98,11 +110,11 @@ app.get('/q', (req, res) => {
             }
         }
     }
-    let sssdb = mongoose.useDb('mydb');
-    const spl = {...mongoose}
-    console.log('请求的/q',spl)
-    let cache:Array<any> = [];
-    let aa = JSON.stringify(spl, function(key, value) {
+    // let sssdb = mongoose.useDb('mydb');
+    const spl = { ...mongoose }
+    console.log('请求的/q', 'spl')
+    let cache: Array<any> = [];
+    let aa = JSON.stringify(spl, function (key, value) {
         if (typeof value === 'object' && value !== null) {
             if (cache.indexOf(value) !== -1) {
                 return;
@@ -113,7 +125,7 @@ app.get('/q', (req, res) => {
     });
     cache = [];
     // return data
-    res.cookie("add",adds,{maxAge: 900000, httpOnly: true});
+    res.cookie("add", adds, { maxAge: 900000, httpOnly: true });
     res.send({
         code: 'ok',
         mongoose: JSON.parse(aa),
