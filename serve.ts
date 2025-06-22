@@ -2,14 +2,14 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-04-12 16:55:28
  * @LastEditors: QAQ 2234558846@qq.com
- * @LastEditTime: 2024-03-20 14:34:44
+ * @LastEditTime: 2025-06-21 19:12:12
  * @FilePath: \SmartFileSystem\serve.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import mongoose from 'mongoose';
+import createMongoose from 'mongoose';
 import app from './src/main';
 import os from 'os';
-
+// const createMongoose = require('mongoose');
 // 端口
 const port: number = 9000
 const User = {
@@ -69,12 +69,12 @@ function getIPAdress() {
     }
 }
 // 数据库连接与服务器开启
-mongoose.connect(`mongodb://${User.name}:${User.pwd}@127.0.0.1:27017/smartFiles`, { bufferCommands: true }).then((res) => {
+createMongoose.connect(`mongodb://${User.name}:${User.pwd}@127.0.0.1:27017/smartFiles`, { bufferCommands: true }).then((res) => {
     console.log('数据库连接成功!', '')
     app.listen(port, () => console.log(`请访问：http://${getIPAdress()}:${port} =>>`))
 }).catch((err) => {
     console.log('数据库连接失败!', err)
     return
 })
-// }
+export default createMongoose
 // SQLConnect()

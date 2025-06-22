@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-03-31 01:11:55
  * @LastEditors: QAQ 2234558846@qq.com
- * @LastEditTime: 2024-03-22 14:05:14
+ * @LastEditTime: 2025-06-20 12:36:07
  * @FilePath: \SmartFileSystem\src\main.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -31,8 +31,15 @@ import * as ejsType from 'ejs';
 import routerApi from './Routers/Api';
 import history from 'connect-history-api-fallback';
 import os from 'os';
+import setRoutersConfig from './Routers/Index';
 // const history = require('connect-history-api-fallback');
 const app = express();
+function removeTrailingSlashIfLengthGreaterThanTwo(str: string) {
+    if (str.length > 2 && str.endsWith('/')) {
+        return str.slice(0, -1); // 移除最后一个字符
+    }
+    return str;
+}
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(history({
@@ -40,20 +47,33 @@ app.use(history({
     // 定向
     rewrites: [
         {
-            // from: /^\/(api+\/){1}/,
-            from: /^\/.*$/,
+            from: /^\/api/, // /^\/api\/.*$/  /^\/api/  /^\/(api+\/){1}/
+            // from: /^\/.*$/,
             to: function (context) {
                 // console.log('context :>> ', context);
                 let path: string = context.parsedUrl.path || ''
-                console.log('path :>> ', path);
-                return "/api"
+                console.log('path api:>> ', path);
+                return path
+                // return "/api"
+                // return '/index.html'
+            }
+        },
+        {
+            from: /^\/.*$/,
+            to: function (context) {
+                // console.log('context :>> ', context);
+                let path1: string = context.parsedUrl.path || ''
+                console.log('path :>> ', path1);
+                return removeTrailingSlashIfLengthGreaterThanTwo(path1)+'index.html'
+                // return '/index.html'
             }
         }
     ]
 }));
 // 模板引擎配置 渲染静态文件
 app.use(express.static(path.join(__dirname, '../web')))
-// app.use(express.static(path.join(__dirname, '../web/PC_Side/')))
+// app.use(express.static(path.join(__dirname, '../web/PC_Side')))
+// app.use(express.static(path.join(__dirname, '../web/qwe')))
 // app.use('/bin', express.static(path.join(__dirname, '../bin')))
 // app.use('/static', express.static(path.join(__dirname, '../web/admin')))
 // 模板引擎配置 引用ejs
@@ -75,7 +95,9 @@ app.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Credentials", 'true');
     //跨域允许的请求方式 
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-    console.log('req.method :>> ', req.method);
+    // 设置Cache-Control为no-cache
+    res.setHeader('Cache-Control', 'no-cache');
+    console.log('req.method :>> ', req.method, 'url:>>', req.url);
     // if (req.method == 'OPTIONS') {
     //     res.header('Allow', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
     //     res.sendStatus(200);
@@ -84,7 +106,7 @@ app.all('*', function (req, res, next) {
     // }
     return next();
 });
-app.use('/', routerApi)
+
 // test
 // app.get('/', (req: express.Request, res: express.Response) => {
 //     res.send('?????');//path.join(__dirname, '../web/index.html')
@@ -143,6 +165,7 @@ app.get('/q', (req, res) => {
 // app.use('/admin' ,require("./routers/Admin"))
 
 // view视图板块
-app.use('/api', routerApi)
+// app.use('/api', routerApi)
 
+setRoutersConfig()
 export default app

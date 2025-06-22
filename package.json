@@ -4,7 +4,7 @@
   "main": "main.ts",
   "license": "MIT",
   "scripts": {
-    "watch": "tsc && nodemon ./bin/main.js",
+    "watch": "tsc && nodemon ./bin/serve.js",
     "serve": "nodemon -e js,ts,tsx --exec ts-node serve.ts",
     "listen": "nodemon --ext js,ts --exec node -r ts-node/register --inspect serve.ts"
   },
@@ -12,8 +12,11 @@
     "connect-history-api-fallback": "^2.0.0",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "fast-glob": "^3.3.3",
     "mongodb": "^5.1.0",
-    "mongoose": "^7.0.3",
+    "mongoose": "^8.15.1",
+    "mongoose-sequence": "^6.0.1",
+    "mongoose-sequence-plugin": "^1.0.5",
     "path": "^0.12.7"
   },
   "devDependencies": {
@@ -21,6 +24,7 @@
     "@types/ejs": "^3.1.2",
     "@types/express": "^4.17.17",
     "@types/mongoose": "^5.11.97",
+    "@types/mongoose-sequence": "^3.0.11",
     "@types/node": "^18.15.11",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0"

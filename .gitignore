@@ -10,8 +10,9 @@
 
 # production
 /build
-/bin/
+/bin/*
 /web
+/dbSQL
 # misc
 .DS_Store
 .env.local

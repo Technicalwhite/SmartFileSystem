@@ -4,6 +4,8 @@
 admin 账号:shenlilu 密码:qwerasdzx1997
 smartFiles 账号:smartFilesAdmin 密码:qwertyui789456
 连接  mongosh -u 账号 -p 密码 --authenticationDatabase 库名
+实例连接  mongosh -u shenlilu -p qwerasdzx1997 --authenticationDatabase admin
+ smartFilesAdmin:qwertyui789456@127.0.0.1:27017/smartFiles
 ######
 
 ### 增加
