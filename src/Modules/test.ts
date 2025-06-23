@@ -39,3 +39,36 @@ type User = InferSchemaType<typeof schema>;
 const UserModel = model<User>('User', schema);
 // const answer: number = UserModel.findByName();
 // console.log('answer :>> ', answer);
+
+        {
+            from: /^\/.*$/,
+            to: function (context) {
+                // console.log('context :>> ', context);
+                let path1: string = context.parsedUrl.path || ''
+                console.log('path 原来:>> ', path.posix.join(path.posix.join(path1)));
+                function removeTrailingSlashIfLengthGreaterThanTwo(str:string) {
+                    if (str.length > 2 && str.endsWith('/')) {
+                        return str.slice(0, -1); // 移除最后一个字符
+                    }
+                    return str;
+                }
+                // console.log('path /:>> ', removeTrailingSlashIfLengthGreaterThanTwo(path));
+                return removeTrailingSlashIfLengthGreaterThanTwo(path1)
+            }
+        }
+import { userLoginType,  } from '../types/UserControllers';
+ 
+const result:userLoginType = {
+            text: "登录板块",
+            code: 'ok',
+            dataQuery: 'kk',
+            thisUser: {}
+};
+
+const myFunction: (a: number, b: number) => number = function(a: number, b: number): number {
+    return a + b;
+}
+console.log('result',result,myFunction(1,2)); // result will be of type number
+git config --global user.name "Technicalwhite"
+git config --global user.email "2234558846@qq.com" 
+ssh-keygen -t rsa -C "2234558846@qq.com"

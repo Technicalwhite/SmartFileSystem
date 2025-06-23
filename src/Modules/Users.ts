@@ -1,33 +1,15 @@
 /*
  * @Author: QAQ 2234558846@qq.com
  * @Date: 2024-03-20 18:11:11
- * @LastEditors: QAQ 2234558846@qq.com
- * @LastEditTime: 2025-06-23 05:25:48
+ * @LastEditors: Technicalwhite 2234558846@qq.com
+ * @LastEditTime: 2025-06-23 10:54:28
  * @FilePath: \SmartFileSystem\src\Modules\Users.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { Model, Schema, model, InferSchemaType, } from 'mongoose';
-// import mongoose from '../../serve';
+import { Usertype, UserModel } from '../types/UsersModules';
 import { getNextSequence, resetSequence } from './AutoIncrement';
 import { usersId_default } from '../../config/dbDefault.json';
-interface Usertype {
-    userName: string;
-    userAccount: string;
-    passWord: string;
-    isAdmin: boolean;
-    inc_id?: number;
-    [prop: string]: unknown;
-}
-// 定义静态方法 动态方法为第三个参数传入<Usertype, {}, UserMethods>
-// 动态方法
-interface UserMethods {
-
-}
-// 静态方法
-interface UserModel extends Model<Usertype> {
-    findByName(): void;
-    resetSequenceFunc(startFrom?: string | number | undefined): void
-}
 
 // 可以引用接口类型合并静态new Schema<Usertype,UserModel> 动态<Usertype, Model<Usertype>, UserMethods>
 const userSchema = new Schema({
@@ -77,7 +59,7 @@ userSchema.methods.textfunc = function () {
 userSchema.pre<Usertype>('save', async function (next) {
     if (!this?.isNew || this?.userId) return next();
     try {
-        this.userId = await getNextSequence('Counter', 'userId');
+        this.userId = await getNextSequence('Users', 'userId');
         console.log('保存前生成自增ID :>> ', this);
         next();
     } catch (error: any) {
