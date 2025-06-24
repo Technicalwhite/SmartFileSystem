@@ -2,13 +2,13 @@
  * @Author: Technicalwhite 2234558846@qq.com
  * @Date: 2025-06-23 01:27:00
  * @LastEditors: Technicalwhite 2234558846@qq.com
- * @LastEditTime: 2025-06-23 11:12:18
+ * @LastEditTime: 2025-06-24 03:24:01
  * @FilePath: \SmartFileSystem\src\Modules\AutoIncrement.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 import { Schema, model, Document, Model } from 'mongoose';
-import { Counter, CounterModel } from '../types/AutoIncrementType';
+import { Counter, CounterModel } from '../types/AutoIncrementModulesType';
 const CounterSchema = new Schema<Counter>({
     modelName: {
         type: String,

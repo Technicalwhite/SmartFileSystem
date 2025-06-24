@@ -1,45 +1,36 @@
 /*
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-03-31 01:11:55
- * @LastEditors: QAQ 2234558846@qq.com
- * @LastEditTime: 2025-06-20 12:36:07
+ * @LastEditors: Technicalwhite 2234558846@qq.com
+ * @LastEditTime: 2025-06-25 07:47:06
  * @FilePath: \SmartFileSystem\src\main.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-// import buildName from './Modules/test';
-// let result1 = buildName("Bob");                  // 现在可以正常工作
-// // let result2 = buildName("Bob", "Adams", "Sra");  // 错误, 参数太多
-// let result3 = buildName("Bob", "Adams");         // 参数刚刚好
-// let result4 = buildName("Bob", "aaaaaa");         // 参数刚刚好
-// const express = require('express')
-// const app = express();
-
-// // 首页
-// app.get('/', (req: Request, res: Response): void => {
-//   // 获取数据库数据
-//   console.log('req', 'res',res)
-//   // res.send([1,2,3,5])
-//   // res.json();
-
-// }) //windows mongodb卸载教程
-// app.listen(3000, '127.0.0.1', () => console.log('请访问：http://192.168.3.7:3000'))
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
+import fs from 'fs';
 import ejs from 'ejs';
 import * as ejsType from 'ejs';
 import routerApi from './Routers/Api';
 import history from 'connect-history-api-fallback';
 import os from 'os';
 import setRoutersConfig from './Routers/Index';
-// const history = require('connect-history-api-fallback');
+
 const app = express();
 function removeTrailingSlashIfLengthGreaterThanTwo(str: string) {
-    if (str.length > 2 && str.endsWith('/')) {
-        return str.slice(0, -1); // 移除最后一个字符
+    // if (str.length > 2 && str.endsWith('/')) {
+    //     return str.slice(0, -1); // 移除最后一个字符
+    // }
+    let strArray = str.split('/')
+    console.log('str.length :>> ', str.split('/'),strArray[1]);
+    if (strArray[1].length >= 1) {
+        return `/${strArray[1]}`
+    }else{
+        return strArray[1];
     }
-    return str;
 }
+const PROJECTS_DIR = path.join(__dirname, '../web'); // 项目存放目录
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(history({
@@ -64,8 +55,10 @@ app.use(history({
                 // console.log('context :>> ', context);
                 let path1: string = context.parsedUrl.path || ''
                 console.log('path :>> ', path1);
-                return removeTrailingSlashIfLengthGreaterThanTwo(path1)+'index.html'
-                // return '/index.html'
+                let link = removeTrailingSlashIfLengthGreaterThanTwo(path1)+'/index.html'
+                console.log('link :>> ', link);
+                return path1
+                // return link
             }
         }
     ]
@@ -107,6 +100,27 @@ app.all('*', function (req, res, next) {
     return next();
 });
 
+app.get(`/fileList`, (req, res) => {
+    console.log('进入/ :>> ', req.url);
+    try {
+        const projects = fs.readdirSync(PROJECTS_DIR).filter(proj => {
+            const stats = fs.statSync(path.join(PROJECTS_DIR, proj));
+            return stats.isDirectory();
+        });
+        // console.log('projects :>> ', projects);
+
+        // res.contentType('text/html'); // 设置响应的内容类型为HTML
+        res.send({
+            code: 200,
+            data: {
+                list: projects
+            }
+        });
+    } catch (error) {
+        console.error('加载项目列表出错:', error);
+        res.status(500).send('无法加载项目列表');
+    }
+});
 // test
 // app.get('/', (req: express.Request, res: express.Response) => {
 //     res.send('?????');//path.join(__dirname, '../web/index.html')
